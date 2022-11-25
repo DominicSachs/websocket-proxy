@@ -1,0 +1,10 @@
+.main-container {
+  background: #ddd;
+  min-height: 100vh;
+
+  .mat-mdc-list {
+    .mdc-list-item__start {
+      margin-right: 16px;
+    }
+  }
+}

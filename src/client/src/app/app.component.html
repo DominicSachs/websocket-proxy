@@ -1,0 +1,11 @@
+<div class="main-container">
+  <mat-toolbar color="primary">
+    <span>SignalR Log</span>
+  </mat-toolbar>
+  <mat-list>
+    <mat-list-item *ngFor="let i of informations">
+      <mat-icon matListItemIcon>notification_add</mat-icon>
+      <div matListItemTitle>{{ i }}</div>
+    </mat-list-item>
+  </mat-list>
+</div>
