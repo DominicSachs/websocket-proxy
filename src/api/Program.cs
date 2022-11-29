@@ -7,8 +7,9 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddControllers();
+        builder.Services.AddHealthChecks();
         builder.Services.AddSignalR();
+        builder.Services.AddControllers();
 
         var app = builder.Build();
 
@@ -16,12 +17,15 @@ public class Program
         {
             app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
         }
+        app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseAuthorization();
-        app.MapControllers();
+
+        app.UseHealthChecks("/healthcheck");
         app.MapHub<MyHub>("/my-hub");
+        app.MapControllers();
 
         app.Run();
     }

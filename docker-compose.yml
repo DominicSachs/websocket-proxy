@@ -1,0 +1,71 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: "rabbitmq"
+    networks:
+      - sample_net
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 20s
+      retries: 5
+
+  api:
+    image: ${DOCKER_REGISTRY-}signalrapi
+    networks:
+      - sample_net
+    ports:
+      - "7169:443"
+    build:
+      context: .
+      dockerfile: src/api/Dockerfile
+    healthcheck:
+      test: ["CMD", "curl", "-f", "https://localhost:7169/healthcheck"]
+      interval: 200s
+      timeout: 200s
+      retries: 5
+
+  signalrproxy:
+    restart: always
+    image: ${DOCKER_REGISTRY-}signalrproxy
+    networks:
+      - sample_net
+    build:
+      context: .
+      dockerfile: src/signalr-proxy/Dockerfile
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+  service1:
+    image: ${DOCKER_REGISTRY-}service1
+    networks:
+      - sample_net
+    build:
+      context: .
+      dockerfile: src/service1/Dockerfile
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  service2:
+    image: ${DOCKER_REGISTRY-}service2
+    networks:
+      - sample_net
+    build:
+      context: .
+      dockerfile: src/service2/Dockerfile
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+networks:
+  sample_net:
+    driver: bridge

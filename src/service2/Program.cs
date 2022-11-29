@@ -7,9 +7,11 @@ public class Program
     public static void Main(string[] args)
     {
         IHost host = Host.CreateDefaultBuilder(args)
-            .ConfigureServices(services =>
+            .ConfigureServices((context, services) =>
             {
-                services.AddSingleton(RabbitHutch.CreateBus("host=localhost"));
+                var connectionString = context.Configuration.GetValue<string>("AppSettings:RabbitConnection");
+
+                services.AddSingleton(RabbitHutch.CreateBus(connectionString));
                 services.AddHostedService<Worker>();
             })
             .Build();
