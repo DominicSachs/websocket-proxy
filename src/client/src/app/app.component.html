@@ -3,7 +3,7 @@
     <span>SignalR Log</span>
   </mat-toolbar>
   <mat-list>
-    <mat-list-item *ngFor="let i of informations">
+    <mat-list-item *ngFor="let i of informations.slice().reverse()">
       <mat-icon matListItemIcon>notification_add</mat-icon>
       <div matListItemTitle>{{ i }}</div>
     </mat-list-item>
