@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.8'
 
 services:
   rabbitmq:
@@ -17,6 +17,8 @@ services:
 
   api:
     image: ${DOCKER_REGISTRY-}signalrapi
+    hostname: api
+    restart: always
     networks:
       - sample_net
     ports:
@@ -25,10 +27,24 @@ services:
       context: .
       dockerfile: src/api/Dockerfile
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost:7169/healthcheck"]
-      interval: 200s
-      timeout: 200s
+      test: curl -f https://api/healthcheck || exit 1
+      interval: 2s
+      timeout: 2s
       retries: 5
+  
+  client:
+    image: ${DOCKER_REGISTRY-}signalrclient
+    build:
+      context: .
+      dockerfile: src/client/Dockerfile
+    ports:
+      - "4200:80"
+    restart: always
+    networks:
+      - sample_net
+    depends_on:
+      api:
+        condition: service_healthy
 
   signalrproxy:
     restart: always

@@ -13,12 +13,12 @@ export class RealTimeDataService {
     console.log('connection: ', environment.hubUrl)
     const connection = new signalR.HubConnectionBuilder()
       .configureLogging(signalR.LogLevel.Debug)
-      .withUrl(environment.hubUrl)
+      .withUrl(environment.hubUrl, { transport: signalR.HttpTransportType.WebSockets, skipNegotiation: true })
       .withAutomaticReconnect()
       .build();
 
     connection.start();
 
-    connection.on('SendInformation', (message: string) => this.informationSubject$.next(message));
+    connection.on('SendInformation', (message) => this.informationSubject$.next(message));
   }
 }

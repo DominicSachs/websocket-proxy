@@ -3,19 +3,20 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Api.Hubs;
 
-public class MyHub : Hub<IMyHub>
+public sealed class MyHub : Hub<IMyHub>
 {
     private readonly ILogger<MyHub> _logger;
 
     public MyHub(ILogger<MyHub> logger)
     {
         _logger = logger;
+
     }
 
     public async Task InformationReceived(string message)
     {
-        _logger.LogInformation("InformationReceived: {message}", message);
+        _logger.LogInformation("MyHub.InformationReceived: {message}", message);
 
-        await Clients.All.SendInformation(message);
+        await Clients.Others.SendInformation(message);
     }
 }

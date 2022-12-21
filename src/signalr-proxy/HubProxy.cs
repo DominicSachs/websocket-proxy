@@ -1,16 +1,28 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace SignalrProxy;
 
 public sealed class HubProxy : IHubProxy
 {
+    private readonly IConfiguration _configuration;
+    private readonly ILogger<HubProxy> _logger;
     private HubConnection? _hubConnection;
+    private readonly string _hubUrl;
 
+    public HubProxy(IConfiguration configuration, ILogger<HubProxy> logger)
+    {
+        _configuration = configuration;
+        _logger = logger;
+        _hubUrl = _configuration.GetValue<string>("AppSettings:HubUrl")!;
+    }
 
     public async Task SendAsync(string methodName, object? argument, CancellationToken token = default)
     {
+        _logger.LogInformation("Send to {method} with {argument}", methodName, argument);
+
         await CreateConnection(token);
-        await _hubConnection!.SendAsync(methodName, argument, token);
+        await _hubConnection!.InvokeAsync(methodName, argument, cancellationToken: token);
     }
 
     private async Task CreateConnection(CancellationToken token)
@@ -26,9 +38,22 @@ public sealed class HubProxy : IHubProxy
     private void InitializeConnection()
     {
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:7169/my-hub")
+            .WithUrl(_hubUrl!, a =>
+            {
+                a.WebSocketConfiguration = conf =>
+                {
+                    conf.RemoteCertificateValidationCallback = (message, cert, chain, errors) => { return true; };
+                };
+
+                a.SkipNegotiation = true;
+                a.Transports = HttpTransportType.WebSockets;
+            })
             .WithAutomaticReconnect()
-            .ConfigureLogging(l => l.AddConsole())
+            .ConfigureLogging(l =>
+            {
+                l.SetMinimumLevel(LogLevel.Debug);
+                l.AddConsole();
+            })
             .Build();
     }
 

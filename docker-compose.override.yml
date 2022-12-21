@@ -1,21 +1,19 @@
-version: '3.4'
+version: '3.8'
 
 services:
   api:
     environment:
       - DOTNET_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:443
       - ASPNETCORE_Kestrel__Certificates__Default__Password=test
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
     volumes:
-      - ~/.aspnet/https:/https:ro
-      #- ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ./certificates:/https:ro
   signalrproxy:
     environment:
       - DOTNET_ENVIRONMENT=Development
       - AppSettings__RabbitConnection=host=rabbitmq
-  #  volumes:
-  #    - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - AppSettings__HubUrl=https://api/my-hub
   service1:
     environment:
       - DOTNET_ENVIRONMENT=Development
