@@ -20,7 +20,7 @@ public class Worker : BackgroundService
 
         while (true)
         {
-            var information = $"Notification {i++} from service 1 at {DateTimeOffset.Now}";
+            var information = $"Notification {i++} from Service 1 at {DateTimeOffset.Now}";
             _logger.LogInformation(information);
 
             await _bus.PubSub.PublishAsync(new InformationEvent(information));

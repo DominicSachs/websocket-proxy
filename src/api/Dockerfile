@@ -1,6 +1,11 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
-EXPOSE 80
+
+RUN apt-get update && apt-get install -y curl
+
+COPY ["certificates/RootCA.crt", "/usr/local/share/ca-certificates/RootCA.crt"]
+RUN update-ca-certificates
+
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build

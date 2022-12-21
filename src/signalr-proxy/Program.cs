@@ -15,9 +15,6 @@ public class Program
                 services.AddSingleton<IHubProxy, HubProxy>();
                 services.AddSingleton<MessageConsumer>();
                 services.AddHostedService<Worker>();
-
-                //services.AddHealthChecks().AddCheck<CustomHealthCheck>("sinalrproxy_hc");
-                //services.AddHostedService<TcpHealthService>();
             })
             .Build();
 
