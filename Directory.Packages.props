@@ -4,8 +4,8 @@
     <NoWarn>NU1507</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="EasyNetQ" Version="7.3.6" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.1" />
+    <PackageVersion Include="EasyNetQ" Version="7.4.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.2" />
