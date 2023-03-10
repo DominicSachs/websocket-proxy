@@ -8,6 +8,6 @@
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 </Project>
